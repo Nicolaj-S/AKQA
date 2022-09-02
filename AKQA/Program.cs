@@ -1,3 +1,9 @@
+using AKQA.Enviroment;
+using AKQA.Services.RecipeServices;
+using AKQA.Services.UserServices;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,9 +13,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<DatabaseContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
+
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+
+
 var app = builder.Build();
 
-builder
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

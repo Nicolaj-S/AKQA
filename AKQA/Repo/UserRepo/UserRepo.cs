@@ -49,7 +49,7 @@ namespace AKQA.Repo.UserRepo
             return await context.User.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public User login(User authUser)
+        public User Login(User authUser)
         {
             var user = context.User.SingleOrDefault(x => x.UserName == authUser.UserName);
             bool isValidPassword = BCrypt.Net.BCrypt.Verify(authUser.Password, user.Password);
