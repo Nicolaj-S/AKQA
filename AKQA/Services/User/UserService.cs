@@ -1,12 +1,13 @@
 ﻿using AKQA.Domain;
+using AKQA.Repo.UserRepo;
 
 namespace AKQA.Services.UserServices
 {
     public class UserService : IUserService
     {
-        private readonly IUserService repo;
+        private readonly IUserRepo repo;
 
-        public UserService(IUserService repo)
+        public UserService(IUserRepo repo)
         {
             this.repo = repo;
         }
