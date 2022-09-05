@@ -9,13 +9,13 @@ import { UserDetailsComponent } from './details/user-details/user-details.compon
 
 const routes: Routes = [
   {path:'', redirectTo: '/home', pathMatch:'full'},
-  {path:'/home', component: MainPageComponent},
+  {path:'home', component: MainPageComponent},
 
-  {path:'/register', component: RegisterComponent},
-  {path:'/login', component:LoginComponent},
+  {path:'Register', component: RegisterComponent},
+  {path:'login', component:LoginComponent},
 
-  {path:'/profile/:Id', component:UserDetailsComponent},
-  {path:'/recipe/:Id', component:RecipeDetailsComponent},
+  {path:'profile/:Id', component:UserDetailsComponent},
+  {path:'recipe/:Id', component:RecipeDetailsComponent},
 
   {path:'**', component:ErrorComponent}
 ];

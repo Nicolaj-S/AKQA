@@ -1,1 +1,18 @@
-<p>register works!</p>
+<form [formGroup]="UserCreate">
+  <label for="">Username</label><br>
+  <input #UserName type="text", formControlName="UserName">
+  <br>
+  <label for="">Firstname</label><br>
+  <input #FirstName type="text", formControlName="FirstName">
+  <br>
+  <label for="">LastName</label><br>
+  <input #LastName type="text", formControlName="LastName">
+  <br>
+  <label for="">Email</label><br>
+  <input #Email type="email", formControlName="Email">
+  <br>
+  <label for="">Password</label><br>
+  <input #Password type="text", formControlName="Password">
+  <br>
+</form>
+<button type="submit" (click)="Create(UserName.value, FirstName.value, LastName.value, Email.value, Password.value)"></button>

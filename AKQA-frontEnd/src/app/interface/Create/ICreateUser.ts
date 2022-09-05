@@ -4,6 +4,6 @@ export interface CreateUser{
   LastName: string;
   Email: String;
   Password: string;
-  Admin: boolean;
+  Admin?: boolean;
   Recipe?: number[];
 }
