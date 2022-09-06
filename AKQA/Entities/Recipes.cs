@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace AKQA.Domain
+namespace AKQA.Entities
 {
     public class Recipes
     {

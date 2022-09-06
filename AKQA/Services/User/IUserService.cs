@@ -1,13 +1,16 @@
-﻿using AKQA.Domain;
+﻿using AKQA.Entities;
+using AKQA.Models.User;
 
 namespace AKQA.Services.UserServices
 {
     public interface IUserService
     {
-        Task<bool> CreateUser(User user);
-        Task<bool> UpdateUser(User user);
-        Task<bool> DeleteUser(User user);
-        Task<ICollection<User>> GetAllUsers();
-        Task<User> GetUserById(int id);
+        AuthenticateResponse Authenticate(AuthenticateRequest model);
+        void Register(RegisterRequest model);
+
+        void UpdateUser(int id, UpdateRequest model);
+        void DeleteUser(int id);
+        IEnumerable<User> GetAllUsers();
+        User GetUserById(int id);
     }
 }

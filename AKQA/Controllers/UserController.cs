@@ -1,67 +1,72 @@
-﻿using AKQA.Domain;
+﻿using AKQA.Authorization;
+using AKQA.Entities;
+using AKQA.Helpers;
+using AKQA.Models.User;
 using AKQA.Services.UserServices;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace AKQA.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class UserController : Controller
+    [Authorize]
+    public class UserController : ControllerBase
     {
         private readonly IUserService service;
+        private IMapper mapper;
+        private readonly AppSettings appSettings;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, IMapper mapper, IOptions<AppSettings> appSettings)
         {
             this.service = service;
+            this.mapper = mapper;
+            this.appSettings = appSettings.Value;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(AuthenticateRequest model)
+        {
+            var response = service.Authenticate(model);
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public IActionResult Register(RegisterRequest model)
+        {
+            service.Register(model);
+            return Ok(new { message = "Registration successful" });
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public IActionResult GetAllUsers()
         {
-            var users = await service.GetAllUsers();
-            if (!ModelState.IsValid)
-                return NotFound(ModelState);
-
+            var users = service.GetAllUsers();
             return Ok(users);
         }
 
-        [HttpGet("Id/{Id}")]
-        public async Task<IActionResult> GetUserById(int Id)
+        [HttpGet("{id}")]
+        public IActionResult GetUserById(int id)
         {
-            var user = await service.GetUserById(Id);
-            if (!ModelState.IsValid)
-                return NotFound(ModelState);
-
+            var user = service.GetUserById(id);
             return Ok(user);
         }
 
-        [HttpPost()]
-        public async Task<IActionResult> CreateUser(User user)
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id, UpdateRequest model)
         {
-            var result = await service.CreateUser(user);
-            return result ? Ok(CreateUser) : BadRequest();
+            service.UpdateUser(id, model);
+            return Ok(new { message = "User updated successfully" });
         }
 
-        [HttpDelete("Delete/{Id}")]
-        public async Task<IActionResult> DeleteUser(int Id)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
         {
-            var UserToDelete = await service.GetUserById(Id);
-            var result = await service.DeleteUser(UserToDelete);
-            return result ? Ok(DeleteUser) : BadRequest();
-        }
-
-        [HttpPatch("Update/{Id}")]
-        public async Task<IActionResult> UpdateUser(int Id, [FromBody] User user)
-        {
-            if (user == null)
-                return NotFound(ModelState);
-            if (!ModelState.IsValid)
-                return NotFound(ModelState);
-            if (Id != user.Id)
-                return NotFound(ModelState);
-
-            var result = await service.UpdateUser(user);
-            return result ? Ok(UpdateUser) : BadRequest();
+            service.DeleteUser(id);
+            return Ok(new { message = "User deleted successfully" });
         }
     }
 }

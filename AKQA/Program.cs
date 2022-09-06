@@ -1,32 +1,40 @@
-using AKQA.Enviroment;
-using AKQA.Repo.RecipeRepo;
-using AKQA.Repo.UserRepo;
-using AKQA.Services.RecipeServices;
-using AKQA.Services.UserServices;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
+using AKQA.Authorization;
+using AKQA.Helpers;
+using AKQA.Services.UserServices;
+using AKQA.Services.RecipeServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var services = builder.Services;
+var env = builder.Environment;
 
-builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
+services.AddDbContext<DatabaseContext>();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
+services.AddCors();
+services.AddControllers();
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepo, UserRepo>();
+// configure automapper with all automapper profiles from this assembly
+services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddScoped<IRecipeService, RecipeService>();
-builder.Services.AddScoped<IRecipeRepo, RecipeRepo>();
+// configure strongly typed settings object
+services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+// configure DI for application services
+services.AddScoped<IJwtUtils, JwtUtils>();
+services.AddScoped<IUserService, UserService>();
+services.AddScoped<IRecipeService, RecipeService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+    dataContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -41,7 +49,19 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors();
+
 app.UseAuthorization();
+
+app.UseCors(x => x
+       .AllowAnyOrigin()
+       .AllowAnyMethod()
+       .AllowAnyHeader());
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
+// custom jwt auth middleware
+app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 

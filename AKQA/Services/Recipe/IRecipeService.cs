@@ -1,4 +1,4 @@
-﻿using AKQA.Domain;
+﻿using AKQA.Entities;
 
 namespace AKQA.Services.RecipeServices
 {

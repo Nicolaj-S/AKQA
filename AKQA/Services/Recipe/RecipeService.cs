@@ -1,20 +1,50 @@
-﻿using AKQA.Domain;
-using AKQA.Repo.RecipeRepo;
+﻿using AKQA.Entities;
+using AKQA.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace AKQA.Services.RecipeServices
 {
     public class RecipeService : IRecipeService
     {
-        private readonly IRecipeRepo repo;
+        private readonly DatabaseContext context;
 
-        public RecipeService(IRecipeRepo repo)
+        public RecipeService(DatabaseContext context)
         {
-            this.repo = repo;
+            this.context = context;
         }
-        public async Task<bool> CreateRecipe(Recipes recipe) => await repo.CreateRecipe(recipe);
-        public async Task<bool> UpdateRecipe(Recipes recipe) => await repo.UpdateRecipe(recipe);
-        public async Task<bool> DeleteRecipe(Recipes recipe) => await repo.DeleteRecipe(recipe);
-        public async Task<ICollection<Recipes>> GetAllRecipes() => await repo.GetAllRecipes();
-        public async Task<Recipes> GetRecipeById(int id) => await repo.GetRecipeById(id);
+
+        public async Task<bool> Save()
+        {
+            var saved = await context.SaveChangesAsync();
+            return saved > 0 ? true : false;
+        }
+
+        public async Task<bool> CreateRecipe(Recipes recipes)
+        {
+            await context.AddAsync(recipes);
+            return await Save();
+        }
+
+        public async Task<bool> DeleteRecipe(Recipes recipes)
+        {
+            context.Remove(recipes);
+            return await Save();
+        }
+
+        public async Task<bool> UpdateRecipe(Recipes recipes)
+        {
+            context.Update(recipes);
+            return await Save();
+        }
+
+        public async Task<ICollection<Recipes>> GetAllRecipes()
+        {
+            return await context.Recipes.ToListAsync();
+        }
+
+        public async Task<Recipes> GetRecipeById(int id)
+        {
+            return await context.Recipes.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
     }
 }
