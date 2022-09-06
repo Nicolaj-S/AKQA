@@ -1,5 +1,6 @@
 import { Component, OnInit, SimpleChange } from '@angular/core';
 import { FormArray, FormControl,FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { CreateUser } from 'src/app/interface/Create/ICreateUser';
 import { UserService } from 'src/app/service/user.service';
@@ -11,7 +12,7 @@ import { UserService } from 'src/app/service/user.service';
 })
 export class RegisterComponent{
 
-  public url = "https://localhost:7254/api/User/"
+  public url = "https://localhost:7254/api/"
 
   UserCreate = new FormGroup({
     UserName : new FormControl(''),
@@ -22,7 +23,8 @@ export class RegisterComponent{
   })
 
   constructor(
-    private UserService : UserService
+    private UserService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit(){
@@ -30,7 +32,6 @@ export class RegisterComponent{
   }
 
   Create(UserName: string, FirstName: string, LastName: string, Email: string, Password: string){
-
     let Data = {
       UserName: UserName,
       FirstName: FirstName,
@@ -40,9 +41,11 @@ export class RegisterComponent{
     }
     this.UserService.Create(Data).subscribe(Data => {
       console.log(Data)
+      this.router.navigate(['login'])
       this.ngOnInit()
     }, (error:any) =>{
-      console.log(error)
+      console.log(error.message)
+      console.log(Data)
     })
   }
 

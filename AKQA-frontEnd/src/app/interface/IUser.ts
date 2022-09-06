@@ -10,3 +10,8 @@ export interface IUser{
   Admin: boolean;
   IRecipe?: IRecipe[];
 }
+
+export interface LoggedInUser{
+  UserName: string;
+  Password:string
+}
