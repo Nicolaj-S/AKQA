@@ -5,13 +5,9 @@ export interface IUser{
   UserName: string;
   FirstName: string;
   LastName: string;
-  Email: String;
   Password: string;
   Admin: boolean;
   IRecipe?: IRecipe[];
+  token: string;
 }
 
-export interface LoggedInUser{
-  UserName: string;
-  Password:string
-}

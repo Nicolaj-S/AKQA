@@ -12,13 +12,10 @@ import { UserService } from 'src/app/service/user.service';
 })
 export class RegisterComponent{
 
-  public url = "https://localhost:7254/api/"
-
   UserCreate = new FormGroup({
     UserName : new FormControl(''),
     FirstName : new FormControl(''),
     LastName : new FormControl(''),
-    Email : new FormControl(''),
     Password : new FormControl(''),
   })
 
@@ -31,15 +28,14 @@ export class RegisterComponent{
     this.UserCreate;
   }
 
-  Create(UserName: string, FirstName: string, LastName: string, Email: string, Password: string){
+  Create(UserName: string, FirstName: string, LastName: string, Password: string){
     let Data = {
       UserName: UserName,
       FirstName: FirstName,
       LastName: LastName,
-      Email: Email,
       Password: Password,
     }
-    this.UserService.Create(Data).subscribe(Data => {
+    this.UserService.register(Data).subscribe(Data => {
       console.log(Data)
       this.router.navigate(['login'])
       this.ngOnInit()
