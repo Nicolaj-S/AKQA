@@ -54,9 +54,9 @@ namespace AKQA.Controllers
         [HttpPatch("Update/{Id}")]
         public async Task<IActionResult> UpdateRecipe(int Id, [FromBody] Recipes recipes)
         {
-            if(recipes == null)
+            if (recipes == null)
                 return NotFound(ModelState);
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return NotFound(ModelState);
             if (Id != recipes.Id)
                 return NotFound(ModelState);

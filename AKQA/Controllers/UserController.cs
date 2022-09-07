@@ -1,5 +1,4 @@
 ﻿using AKQA.Authorization;
-using AKQA.Entities;
 using AKQA.Helpers;
 using AKQA.Models.User;
 using AKQA.Services.UserServices;
@@ -40,14 +39,14 @@ namespace AKQA.Controllers
             service.Register(model);
             return Ok(new { message = "Registration successful" });
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllUsers()
         {
             var users = service.GetAllUsers();
             return Ok(users);
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {

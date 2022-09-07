@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using AKQA.Authorization;
 using AKQA.Helpers;
-using AKQA.Services.UserServices;
 using AKQA.Services.RecipeServices;
+using AKQA.Services.UserServices;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

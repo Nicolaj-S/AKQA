@@ -3,7 +3,6 @@ using AKQA.Entities;
 using AKQA.Helpers;
 using AKQA.Models.User;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace AKQA.Services.UserServices
@@ -44,7 +43,7 @@ namespace AKQA.Services.UserServices
         }
         public void Register(RegisterRequest model)
         {
-            if(context.User.Any(x => x.UserName == model.UserName))
+            if (context.User.Any(x => x.UserName == model.UserName))
             {
                 throw new AppException("Username: '" + model.UserName + "' is already taken");
             }
@@ -58,13 +57,13 @@ namespace AKQA.Services.UserServices
         public void UpdateUser(int id, UpdateRequest model)
         {
             var user = getUser(id);
-            if(model.UserName != user.UserName && context.User.Any(x => x.UserName == model.UserName))
+            if (model.UserName != user.UserName && context.User.Any(x => x.UserName == model.UserName))
             {
                 throw new AppException("Username: '" + model.UserName + "' is already taken");
             }
             if (!string.IsNullOrEmpty(model.Password))
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
-            if(!string.IsNullOrEmpty(model.FirstName))
+            if (!string.IsNullOrEmpty(model.FirstName))
                 user.FirstName = model.FirstName;
             if (!string.IsNullOrEmpty(model.LastName))
                 user.LastName = model.LastName;
