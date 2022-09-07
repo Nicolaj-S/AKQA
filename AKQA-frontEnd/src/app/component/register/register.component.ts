@@ -1,8 +1,10 @@
 import { Component, OnInit, SimpleChange } from '@angular/core';
-import { FormArray, FormControl,FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormArray, FormControl,FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs';
 
 import { CreateUser } from 'src/app/interface/Create/ICreateUser';
+import { IUser } from 'src/app/interface/IUser';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -11,38 +13,46 @@ import { UserService } from 'src/app/service/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent{
+  form: FormGroup;
+  loading = false;
+  submitted = false;
 
-  UserCreate = new FormGroup({
-    UserName : new FormControl(''),
-    FirstName : new FormControl(''),
-    LastName : new FormControl(''),
-    Password : new FormControl(''),
-  })
-
-  constructor(
-    private UserService: UserService,
-    private router: Router
-  ) { }
+  constructor( private formbuilder: FormBuilder, private UserService: UserService, private router: Router, private route: ActivatedRoute) {
+    this.form = this.formbuilder.group({
+      username: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      password: ['', Validators.required]
+    })
+   }
 
   ngOnInit(){
-    this.UserCreate;
   }
 
-  Create(UserName: string, FirstName: string, LastName: string, Password: string){
+  get f() { return this.form.controls; }
+
+  onSubmit(){
+    this.submitted = true;
+
+    if(this.form.invalid)
+      return;
+
     let Data = {
-      UserName: UserName,
-      FirstName: FirstName,
-      LastName: LastName,
-      Password: Password,
+      UserName: this.f['username'].value,
+      FirstName: this.f['firstName'].value,
+      LastName: this.f['lastName'].value,
+      Password: this.f['password'].value
     }
-    this.UserService.register(Data).subscribe(Data => {
-      console.log(Data)
-      this.router.navigate(['login'])
-      this.ngOnInit()
-    }, (error:any) =>{
-      console.log(error.message)
-      console.log(Data)
-    })
+    this.loading = true
+    this.UserService.register(Data)
+      .pipe(first()).subscribe({next: () =>{
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
+        this.router.navigateByUrl(returnUrl);
+      },
+      error: error=> {
+        console.error(error.message);
+        this.loading = false
+      }
+    });
   }
-
 }

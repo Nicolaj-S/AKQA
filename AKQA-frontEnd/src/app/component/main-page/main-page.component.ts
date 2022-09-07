@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
 import { IUser } from 'src/app/interface/IUser';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-main-page',
@@ -16,7 +15,6 @@ export class MainPageComponent{
 
   ngOnInit(){
     this.userService.GetUser((this.User.id)).subscribe(Data => {this.User = Data; console.log(Data)})
-    console.log(this.User)
   }
 
   GoToUserProfile(){
