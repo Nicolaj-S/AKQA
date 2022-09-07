@@ -1,12 +1,12 @@
 import { IRecipe } from "./IRecipe";
 
 export interface IUser{
-  Id : number;
-  UserName: string;
-  FirstName: string;
-  LastName: string;
-  Password: string;
-  Admin: boolean;
+  id : number;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  admin: boolean;
   IRecipe?: IRecipe[];
   token: string;
 }
