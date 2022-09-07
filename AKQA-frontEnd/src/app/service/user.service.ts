@@ -42,19 +42,19 @@ export class UserService{
     return this.http.post(`${environment.urlReg}`, user);
   }
   GetUsers():Observable<IUser[]>{
-    return this.http.get<IUser[]>(`${environment.apiUrl}User`);
+    return this.http.get<IUser[]>(`${environment.apiUrl}`);
   }
-  GetUser(Id:number):Observable<IUser>{
-    return this.http.get<IUser>(`${environment.apiUrl}User/${Id}`);
+  GetUser(id:number):Observable<IUser>{
+    return this.http.get<IUser>(`${environment.apiUrl}${id}`);
   }
   UpdateUser(Id:number,change:IUser){
-    this.http.patch(`${environment.apiUrl}User/${Id}`, change).subscribe(res => {
+    this.http.patch(`${environment.apiUrl}${Id}`, change).subscribe(res => {
       console.log("passed")
     }, error =>{
       console.log(error)
     });
   }
   DeleteUser(Id:number):Observable<IUser>{
-    return this.http.delete<IUser>(`${environment.apiUrl}User/${Id}`)
+    return this.http.delete<IUser>(`${environment.apiUrl}${Id}`)
   }
 }

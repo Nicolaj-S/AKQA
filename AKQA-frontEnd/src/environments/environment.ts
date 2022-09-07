@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   urlReg: 'https://localhost:7254/User/register',
   urlLog: 'https://localhost:7254/User/authenticate',
-  apiUrl: 'https://localhost:7254/api/'
+  apiUrl: 'https://localhost:7254/User/'
 };
 
 /*
